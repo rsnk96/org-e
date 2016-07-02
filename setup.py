@@ -1,11 +1,12 @@
 from distutils.core import setup
-import py2exe, os, sys
+import py2exe, os
 
 # setup(console=['org_e.py'])
-Mydata_files = [('images', ['Org-E bg.PNG'])]
+Mydata_files = [('images', [os.path.join('images','Org-E bg.PNG'), os.path.join('images','Org-E Logo.png')])]
 setup(
-    options = {'py2exe': {'bundle_files': 2, 'compressed': True}},
+    # options = {'py2exe': {'includes':['sip', 'PyQt4.QtCore', 'PyQt4.QtGui']}},
+    options = {'py2exe': {'includes':['sip'], 'bundle_files': 1, 'compressed': True}},
     data_files = Mydata_files,
-    windows = [{'script': "org_e.py", 'icon_resources': [(0, 'Org.ico')]}],
+    windows = [{'script': "org_e.py", 'icon_resources': [(0, os.path.join('images','Org-E_Logo.ico'))]}],
     zipfile = None,
 )

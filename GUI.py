@@ -1,89 +1,80 @@
-import tkinter as tk
-from tkinter import ttk
+import sys
+from PyQt4 import QtGui, QtCore
 
 
-LARGE_FONT= ("Verdana", 12)
+shouldSortOtherFolders=False
+shouldSortIntoOSDirectory=False
 
 
-class SeaofBTCapp(tk.Tk):
+class Window(QtGui.QWidget):
 
-    def __init__(self, *args, **kwargs):
-        
-        tk.Tk.__init__(self, *args, **kwargs)
+	def __init__(self):
+		super(Window, self).__init__()
+		self.setGeometry(0,30,1366,697)
+		self.setFixedSize(1366,697)
 
-        tk.Tk.iconbitmap(self,default='Org.E Logo.PNG')
-        tk.Tk.wm_title(self, "Sea of BTC Client")
+		palette	= QtGui.QPalette()
+		palette.setBrush(QtGui.QPalette.Background, QtGui.QBrush(QtGui.QPixmap('Org-E Bg.png')))
 
-        container = tk.Frame(self)
-        container.pack(side="top", fill="both", expand = True)
-        container.grid_rowconfigure(0, weight=1)
-        container.grid_columnconfigure(0, weight=1)
+		self.setPalette(palette)
+		self.setWindowTitle('Org-E. Declutter your Life!')
+		self.setWindowIcon(QtGui.QIcon('Org.ico'))
 
-        self.frames = {}
+		self.home()
 
-        for F in (StartPage, PageOne, PageTwo):
+	def home(self):
+		self.sortOtherFolders =QtGui.QCheckBox(self)
+		self.sortOtherFolders.move(125,343)
 
-            frame = F(container, self)
-            self.frames[F] = frame
-            frame.grid(row=0, column=0, sticky="nsew")
+		self.sortIntoOSFolders =QtGui.QCheckBox(self)
+		self.sortIntoOSFolders.move(125,380)
 
-        self.show_frame(StartPage)
+		quitButton = HoverButton(self)
+		quitButton.clicked.connect(QtCore.QCoreApplication.instance().quit)
+		quitButton.setText('Quit')
+		quitButton.move(850,550)
+		quitButton.resize(200,100)
 
-    def show_frame(self, cont):
+		mainButton = HoverButton(self)
+		mainButton.setText('Choose Folder')
+		mainButton.move(300,550)
+		mainButton.resize(300,100)
+		mainButton.clicked.connect(self.theMainThing)
 
-        frame = self.frames[cont]
-        frame.tkraise()
+		self.show()
 
-        
-class StartPage(tk.Frame):
+	def theMainThing(self):
+		global shouldSortOtherFolders, shouldSortIntoOSDirectory
+		if self.sortOtherFolders.isChecked():
+			shouldSortOtherFolders = True
+		else:
+			shouldSortOtherFolders = False
 
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self,parent)
-        
-        label = ttk.Label(self, text="Start Page", font=LARGE_FONT)
-        label.pack(pady=10,padx=10)
+		if self.sortIntoOSFolders.isChecked():
+			shouldSortIntoOSDirectory = True
+		else:
+			shouldSortIntoOSDirectory = False
 
-        button = ttk.Button(self, text="Visit Page 1",
-                            command=lambda: controller.show_frame(PageOne))
-        button.pack()
+		pressed()
+		# file = str(QtGui.QFileDialog.getExistingDirectory(self, 'Select Directory'))
 
-        button2 = ttk.Button(self, text="Visit Page 2",
-                            command=lambda: controller.show_frame(PageTwo))
-        button2.pack()
+class HoverButton(QtGui.QPushButton):
 
+    def __init__(self, parent=None):
+        super(HoverButton, self).__init__(parent)
+        self.setStyleSheet("background-color:#45786d; font:25px Corbel; color:white; border-style:outset")
+        self.setMouseTracking(True)
 
-class PageOne(tk.Frame):
+    def enterEvent(self,event):
+        # print("Enter")
+        self.setStyleSheet("background-color:#56897e; font:25px Corbel; color: white ;border:1px")
 
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        label = ttk.Label(self, text="Page One!!!", font=LARGE_FONT)
-        label.pack(pady=10,padx=10)
+    def leaveEvent(self,event):
+        self.setStyleSheet("background-color:#45786d; font:25px Corbel; color: white ;border:1px")
 
-        button1 = ttk.Button(self, text="Back to Home",
-                            command=lambda: controller.show_frame(StartPage))
-        button1.pack()
+def run():
+	app =QtGui.QApplication(sys.argv)
+	GUI = Window()
+	sys.exit(app.exec_())
 
-        button2 = ttk.Button(self, text="Page Two",
-                            command=lambda: controller.show_frame(PageTwo))
-        button2.pack()
-
-
-class PageTwo(tk.Frame):
-
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        label = ttk.Label(self, text="Page Two!!!", font=LARGE_FONT)
-        label.pack(pady=10,padx=10)
-
-        button1 = ttk.Button(self, text="Back to Home",
-                            command=lambda: controller.show_frame(StartPage))
-        button1.pack()
-
-        button2 = ttk.Button(self, text="Page One",
-                            command=lambda: controller.show_frame(PageOne))
-        button2.pack()
-        
-
-
-app = SeaofBTCapp()
-app.mainloop()
+run()
