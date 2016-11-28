@@ -4,33 +4,34 @@ import hashlib
 import sys
 from shutil import move
 
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtCore, QtGui, QtWidgets
 
 shouldSortOtherFolders=False
 shouldSortIntoOSDirectory=0
 original_directory=''
 
 #The first element of each of these lists is the name of the folder
-folderNames             = [ 'Other Folders', 'Audio', 'Compressed Files', 'Codes', 'Database Files', os.path.join('Office Files', 'Documents'), 'Emails', 'Executables', 'Fonts', 'Models', 'Videos', 'Images', 'PDFs and Page Layout Docs', os.path.join('Office Files', 'Presentations'), os.path.join('Office Files', 'Spreadsheets'), 'Text and Data Files', 'Torrents', 'Webpages']
+folderNames             = [ 'Other Folders', 'Audio', 'Compressed Files', 'Codes', 'Database Files', os.path.join('Office Files', 'Documents'), 'Emails', 'Executables', 'Fonts', 'Designs and Models', 'Videos', 'Images', 'PDFs and Page Layout Docs', os.path.join('Office Files', 'Presentations'), os.path.join('Office Files', 'Spreadsheets'), 'Text and Data Files', 'Torrents', 'Webpages', 'Office Files']
 audioExtensions         = [ folderNames[1], '.wav', '.mid', '.midi', '.wma', '.mp3', '.ogg', '.rma', '.m4a', 'm3u', '.aif', '.mid' ]
 compressedExtensions    = [ folderNames[2], '.zip', '.rar', '.7z', '.gz', '.iso', '.tar', '.zipx', '.pkg', '.gz', '.deb', '.xz', '.bz2', '.tgz']
 codeExtensions          = [ folderNames[3], '.py', '.cpp', '.cs', '.xml', '.java', '.c', '.xaml', '.m', '.pyd', '.pyc', '.class', '.h', '.pl', '.sh', '.sln', '.vb', '.vcxproj', '.xcodeproj' ]
 databaseExtensions      = [ folderNames[4], '.accdb', '.db', '.dbf', '.mdb', '.pdb', '.sql', '.db-journal']
-documentExtensions      = [ folderNames[5], '.doc' ,'.docx', '.odf', '.docm', '.dot', '.dotx', '.pages', '.wpd', '.wps' ]
+documentExtensions      = [ folderNames[5], '.doc' ,'.docx', '.odf', '.docm', '.dot', '.dotx', '.pages', '.wpd', '.wps']
 emailExtensions         = [ folderNames[6], '.msg']
 exeExtensions           = [ folderNames[7], '.exe' , '.msi', '.apk', '.app', '.bat', '.cgi', '.com', '.gadget', '.jar', '.wsf', '.iss', '']  #there's a safeguard for folders annyways
 fontExtensions          = [ folderNames[8],  '.fnt', '.fon', '.otf', '.ttf']
-modellingExtensions     = [ folderNames[9], '.3dm', '.3ds', '.max', '.obj', '.dwg', '.dxf' ]
-videoExtensions         = [ folderNames[10], '.avi', '.mp4', '.divx', '.wmv', '.mkv', '.srt', '.3gp', '.flv', '.m4v', '.mov', '.mpg' ]
-picExtensions           = [ folderNames[11], '.png', '.jpg', '.jpeg', '.bmp', '.gif', '.ico', '.dcm', '.thm', '.tga', '.svg', '.tif', '.psd', '.ai', '.pspimage' ]
+modellingExtensions     = [ folderNames[9], '.3dm', '.3ds', '.max', '.obj', '.dwg', '.dxf', '.psd', '.ai', '.pub', '.pmg' ]
+videoExtensions         = [ folderNames[10], '.avi', '.mp4', '.divx', '.wmv', '.mkv', '.srt', '.3gp', '.flv', '.m4v', '.mov', '.mpg', '.webm' ]
+picExtensions           = [ folderNames[11], '.png', '.jpg', '.jpeg', '.bmp', '.gif', '.ico', '.dcm', '.thm', '.tga', '.svg', '.tif', '.pspimage' ]
 pdfExtensions           = [ folderNames[12], '.pdf', '.indd', '.tex', '.epub' ]
 presentationExtenstions = [ folderNames[13], '.ppt' ,'.pptx', '.pptm', '.pot', '.potx', '.potm', '.phm', '.phmx', '.pps', '.ppsx', '.ppam', '.ppa', '.odp', '.key']
 spreadsheetExtensions   = [ folderNames[14], '.xls' ,'.xlsx', '.xlsm', '.xlsx', '.xlsb', '.xltx', '.xltm', '.xls', '.xlt', '.xlsx', '.xlam', '.xla', '.xlw', '.ods', 'xlr' ]
 textFileExtensions      = [ folderNames[15], '.txt', '.rtf', '.log', '.rst', '.in', '.md', '.csv', '.dat', '.sdf', '.bak', '.tmp',  ]
 torrentExtensions       = [ folderNames[16], '.torrent', '.tor', '.torr' ]
 webpageExtensions       = [ folderNames[17], '.js', '.htm', '.html', '.css', '.asp', '.aspx', '.cer', '.csr', '.jsp', '.php', '.rss', '.xhtml', '.crx', ]
+officeExtensions       = [ folderNames[18], '.one','.pub', '.ini']
 
-validExtensions = [videoExtensions, audioExtensions, picExtensions, pdfExtensions, documentExtensions, presentationExtenstions, spreadsheetExtensions, codeExtensions, exeExtensions, compressedExtensions, torrentExtensions, webpageExtensions, textFileExtensions, emailExtensions, databaseExtensions, modellingExtensions, fontExtensions]
+validExtensions = [videoExtensions, audioExtensions, picExtensions, pdfExtensions, documentExtensions, presentationExtenstions, spreadsheetExtensions, codeExtensions, exeExtensions, compressedExtensions, torrentExtensions, webpageExtensions, textFileExtensions, emailExtensions, databaseExtensions, modellingExtensions, fontExtensions, officeExtensions]
 
 
 
@@ -129,7 +130,7 @@ def pressed():
 
 
 
-class Window(QtGui.QWidget):
+class Window(QtWidgets.QMainWindow):
 
 	def __init__(self):
 		super(Window, self).__init__()
@@ -137,19 +138,19 @@ class Window(QtGui.QWidget):
 		self.setFixedSize(1366,697)
 
 		palette	= QtGui.QPalette()
-		palette.setBrush(QtGui.QPalette.Background, QtGui.QBrush(QtGui.QPixmap(os.path.join('images','Org-E Bg.png'))))
-
+		palette.setBrush(QtGui.QPalette.Background, QtGui.QBrush(QtGui.QPixmap(os.path.join('images','Org-E bg.PNG'))))
 		self.setPalette(palette)
+
 		self.setWindowTitle('Org-E. Declutter your Life!')
 		# self.setWindowIcon(QtGui.QIcon('Org.ico'))
 
 		self.home()
 
 	def home(self):
-		self.sortOtherFolders =QtGui.QCheckBox(self)
+		self.sortOtherFolders =QtWidgets.QCheckBox(self)
 		self.sortOtherFolders.move(125,343)
 
-		self.sortIntoOSFolders =QtGui.QCheckBox(self)
+		self.sortIntoOSFolders =QtWidgets.QCheckBox(self)
 		self.sortIntoOSFolders.move(125,380)
 
 		quitButton = HoverButton(self)
@@ -179,10 +180,10 @@ class Window(QtGui.QWidget):
 			shouldSortIntoOSDirectory = 0
 
 		global original_directory
-		original_directory = str(QtGui.QFileDialog.getExistingDirectory(self, 'Select Directory'))
+		original_directory = str(QtWidgets.QFileDialog.getExistingDirectory(self, 'Select Directory'))
 		if(original_directory==''):
 			# print('Please choose a valid directory\n\n')
-			QtGui.QMessageBox.information(self,'Invalid Directory','Please choose a valid directory', QtGui.QMessageBox.Ok)
+			QtWidgets.QMessageBox.information(self,'Invalid Directory','Please choose a valid directory', QtWidgets.QMessageBox.Ok)
 			# time.sleep(5)
 			# sys.exit(0)
 		else:
@@ -193,12 +194,12 @@ class Window(QtGui.QWidget):
 				time.sleep(5)
 				sys.exit(0)
 			pressed()
-			msgBox = QtGui.QMessageBox
-			msgBox.information(self,'Operation Completed',original_directory+' decluttered.', QtGui.QMessageBox.Ok)
+			msgBox = QtWidgets.QMessageBox
+			msgBox.information(self,'Operation Completed',original_directory+' decluttered.', QtWidgets.QMessageBox.Ok)
 
-		# file = str(QtGui.QFileDialog.getExistingDirectory(self, 'Select Directory'))
+		# file = str(QtWidgets.QFileDialog.getExistingDirectory(self, 'Select Directory'))
 
-class HoverButton(QtGui.QPushButton):
+class HoverButton(QtWidgets.QPushButton):
 
     def __init__(self, parent=None):
         super(HoverButton, self).__init__(parent)
@@ -213,7 +214,7 @@ class HoverButton(QtGui.QPushButton):
         self.setStyleSheet("background-color:#45786d; font:25px Corbel; color: white ;border:1px")
 
 def run():
-	app =QtGui.QApplication(sys.argv)
+	app =QtWidgets.QApplication(sys.argv)
 	app.setWindowIcon(QtGui.QIcon(os.path.join('images','Org-E Logo.png')))
 	GUI = Window()
 	sys.exit(app.exec_())
