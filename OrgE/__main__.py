@@ -138,7 +138,7 @@ class Window(QtWidgets.QMainWindow):
 		self.setFixedSize(1366,697)
 
 		palette	= QtGui.QPalette()
-		palette.setBrush(QtGui.QPalette.Background, QtGui.QBrush(QtGui.QPixmap(os.path.join('images','Org-E bg.PNG'))))
+		palette.setBrush(QtGui.QPalette.Background, QtGui.QBrush(QtGui.QPixmap(os.path.join('OrgE','images','org-e bg.PNG'))))
 		self.setPalette(palette)
 
 		self.setWindowTitle('Org-E. Declutter your Life!')
@@ -213,10 +213,11 @@ class HoverButton(QtWidgets.QPushButton):
     def leaveEvent(self,event):
         self.setStyleSheet("background-color:#45786d; font:25px Corbel; color: white ;border:1px")
 
-def run():
+def main():
 	app =QtWidgets.QApplication(sys.argv)
-	app.setWindowIcon(QtGui.QIcon(os.path.join('images','Org-E Logo.png')))
+	app.setWindowIcon(QtGui.QIcon(os.path.join('OrgE', 'images','org-e logo.png')))
 	GUI = Window()
 	sys.exit(app.exec_())
 
-run()
+if __name__ == "__main__":
+	main()
