@@ -1,9 +1,0 @@
-setup.py
-OrgE/__init__.py
-OrgE/__main__.py
-org_e.egg-info/PKG-INFO
-org_e.egg-info/SOURCES.txt
-org_e.egg-info/dependency_links.txt
-org_e.egg-info/entry_points.txt
-org_e.egg-info/requires.txt
-org_e.egg-info/top_level.txt

@@ -1,3 +1,0 @@
-[console_scripts]
-org-e = OrgE.__main__:main
-

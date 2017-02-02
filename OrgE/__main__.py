@@ -3,7 +3,7 @@ import os
 import hashlib
 import sys
 from shutil import move
-
+import site
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 shouldSortOtherFolders=False
@@ -138,7 +138,7 @@ class Window(QtWidgets.QMainWindow):
 		self.setFixedSize(1366,697)
 
 		palette	= QtGui.QPalette()
-		palette.setBrush(QtGui.QPalette.Background, QtGui.QBrush(QtGui.QPixmap(os.path.join('OrgE','images','org-e bg.PNG'))))
+		palette.setBrush(QtGui.QPalette.Background, QtGui.QBrush(QtGui.QPixmap(os.path.join(site.getsitepackages()[0],'OrgE','images','org-e bg.jpg'))))
 		self.setPalette(palette)
 
 		self.setWindowTitle('Org-E. Declutter your Life!')
@@ -215,7 +215,7 @@ class HoverButton(QtWidgets.QPushButton):
 
 def main():
 	app =QtWidgets.QApplication(sys.argv)
-	app.setWindowIcon(QtGui.QIcon(os.path.join('OrgE', 'images','org-e logo.png')))
+	app.setWindowIcon(QtGui.QIcon(os.path.join(site.getsitepackages()[0], 'OrgE', 'images','org-e logo.png')))
 	GUI = Window()
 	sys.exit(app.exec_())
 
